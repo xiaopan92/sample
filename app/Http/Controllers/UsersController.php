@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Status;
 use Auth;
 use Mail;
 
@@ -27,7 +28,10 @@ class UsersController extends Controller
         return view('users.create');
     }
     public function show(User $user){
-        return view('users.show',compact('user'));
+        $statuses=$user->statuses()
+                        ->orderByDesc('created_at')
+                        ->paginate(30);
+        return view('users.show',compact('user','statuses'));
     }
     public function store(Request $request){
         $this->validate($request,[
